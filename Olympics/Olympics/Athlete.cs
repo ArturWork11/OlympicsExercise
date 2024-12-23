@@ -6,16 +6,20 @@ using System.Threading.Tasks;
 
 namespace Olympics
 {
-    internal class Athletes : Medals
+    internal class Athlete : Medal
     {
-        public string Name { get; set; }
+        #region Properties
+        public string AthleteName { get; set; }
         public string Surname { get; set; }
         public DateTime DateOfBirth { get; set; }
         public string Country { get; set; }
+        #endregion
 
+        #region Methods
         public override string ToString()
         {
-            return base.ToString() + $"Name: {Name} \nSurname: {Surname} \nDate of birth: {DateOfBirth} \nCountry: {Country}\n";
+            return base.ToString() + $"Name: {AthleteName} \nSurname: {Surname} \nDate of birth: {DateOfBirth} \nCountry: {Country}\n";
         }
+        #endregion
     }
 }
