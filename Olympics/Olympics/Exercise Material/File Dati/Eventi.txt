@@ -1,4 +1,3 @@
-id;evento;anno;luogo
 1;Olimpiadi;2021;Tokyo
 3;Olimpiadi;1948;Londra
 4;Olimpiadi;1996;Atlanta

@@ -1,4 +1,3 @@
-id;idatleta;idgara;idevento;medaglia
 1;1;1;1;Bronzo
 2;1;7;1;Bronzo
 3;2;3;6;Oro

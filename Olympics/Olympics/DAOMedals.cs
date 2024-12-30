@@ -9,11 +9,12 @@ namespace Olympics
 {
     internal class DAOMedals : IDAO
     {
+
         #region Singleton
         private IDatabase db;
         private DAOMedals()
         {
-            db = new Database("Olympics");
+            db = new Database("Olympics","ArtuzPc");
         }
         private static DAOMedals instance = null;
         public static DAOMedals GetInstance()
@@ -27,9 +28,10 @@ namespace Olympics
         #region CRUD
         public bool CreateRecord(Entity entity)
         {
-            return db.UpdateDb($"INSERT INTO Medals (idAthlete, idCompetition, idEvent, medalTier) " +
-                               $"VALUES " +
-                               $"( {(((Medal)entity).Athlete != null ? ((Medal)entity).Athlete.Id : "null")}, " +
+            return db.UpdateDb($"INSERT INTO Medals (id, idAthlete, idCompetition, idEvent, medalTier) " +
+                               $"VALUES " + 
+                               $"( {((Medal)entity).Id}, " +
+                               $"  {(((Medal)entity).Athlete != null ? ((Medal)entity).Athlete.Id : "null")}, " +
                                $"  {(((Medal)entity).Competition != null ? ((Medal)entity).Competition.Id : "null")}, " +
                                $"  {(((Medal)entity).Event != null ? ((Medal)entity).Event.Id : "null")}, " +
                                $" '{((Medal)entity).MedalTier}');");
@@ -41,7 +43,7 @@ namespace Olympics
         public Entity? FindRecord(int recordId)
         {
             var row = db.ReadOneDb($"SELECT * FROM Medals WHERE id = {recordId};");
-            if (instance == null)
+            if (row != null)
             {
                 Entity entity = new Medal();
                 entity.TypeSort(row);
@@ -54,17 +56,25 @@ namespace Olympics
         {
             List<Entity> list = new List<Entity>();
             var rows = db.ReadDb("SELECT * FROM Medals;");
-            foreach (var row in rows)
+            if (rows.Count <= 1)
             {
-                Entity entity = new Medal();
-                entity.TypeSort(row);
-                list.Add(entity);
+                return null;
             }
-            return list;
+            else
+            {
+                foreach (var row in rows)
+                {
+                    Entity entity = new Medal();
+                    entity.TypeSort(row);
+                    list.Add(entity);
+                }
+                return list;
+            }
         }
         public bool UpdateRecord(Entity entity)
         {
             return db.UpdateDb($"UPDATE Medals SET " +
+                               $"id = {((Medal)entity).Id}, " +
                                $"idAthlete = {(((Medal)entity).Athlete != null ? ((Medal)entity).Athlete.Id : "null")}, " +
                                $"idCompetition = {(((Medal)entity).Competition != null ? ((Medal)entity).Competition.Id : "null")}, " +
                                $"idEvent = {(((Medal)entity).Event != null ? ((Medal)entity).Event.Id : "null")}, " +
@@ -72,7 +82,55 @@ namespace Olympics
                                $"WHERE id = {entity.Id};");
         }
 
+        public void ImportMedalsFromFile(string filePath)
+        {
+            try
+            {
+                var lines = File.ReadAllLines(filePath);
+                foreach (var line in lines)
+                {
+                    var values = line.Split(';');
+                    if (values.Length < 5)
+                    {
+                        Console.WriteLine($"Skipping line due to insufficient data: {line}");
+                        continue;
+                    }
+                    var dictionary = new Dictionary<string, string>
+                    {
+                            { "id", values[0] },
+                            { "idAthlete", values[1] },
+                            { "idCompetition", values[2] },
+                            { "idEvent", values[3] },
+                            { "medalTier", values[4] }
+
+                    };
+
+                    Entity entity = new Medal();
+
+                    
+                    ((Medal)entity).FromDictionary(dictionary);
+
+                    if (entity != null)
+                {
+
+
+                    CreateRecord(entity);
+                }
+                else
+                {
+                    Console.WriteLine("Failed to create entity from the provided Data");
+                }
+            }
+            }
+            catch (FileNotFoundException ex)
+            {
+                Console.WriteLine($"The file at path {filePath} was not found: {ex.Message}");
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"An error occurred while importing medals from file: {ex.Message}");
+            }
+        }
         #endregion
     }
-
 }

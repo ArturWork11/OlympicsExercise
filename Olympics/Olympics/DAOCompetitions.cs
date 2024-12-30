@@ -13,7 +13,7 @@ namespace Olympics
         private IDatabase db;
         private DAOCompetitions()
         {
-            db = new Database("Olympics");
+            db = new Database("Olympics","ArtuzPc");
         }
         private static DAOCompetitions instance = null;
         public static DAOCompetitions GetInstance()
@@ -27,10 +27,11 @@ namespace Olympics
         #region CRUD
         public bool CreateRecord(Entity entity)
         {
-            return db.UpdateDb($"INSERT INTO Competitions (competitionName, category, isIndoor, isTeamCompetitions) " +
+            return db.UpdateDb($"INSERT INTO Competitions (id, competitionName, category, isIndoor, isTeamCompetition) " +
                                $"VALUES " +
-                               $"('{((Competition)entity).CompetitionName.Replace("'", "''")}', " +
-                               $"('{((Competition)entity).Category.Replace("'", "''")}', " +
+                               $"( {((Competition)entity).Id}, " +
+                               $" '{((Competition)entity).CompetitionName.Replace("'", "''")}', " +
+                               $" '{((Competition)entity).Category.Replace("'", "''")}', " +
                                $"  {(((Competition)entity).IsIndoor ? 1 : 0)}, " +
                                $"  {(((Competition)entity).IsTeamCompetition ? 1: 0)});");
         }
@@ -41,7 +42,7 @@ namespace Olympics
         public Entity? FindRecord(int recordId)
         {
             var row = db.ReadOneDb($"SELECT * FROM Competitions WHERE id = {recordId};");
-            if (instance == null)
+            if (row != null)
             {
                 Entity entity = new Competition();
                 entity.TypeSort(row);
@@ -54,22 +55,75 @@ namespace Olympics
         {
             List<Entity> list = new List<Entity>();
             var rows = db.ReadDb("SELECT * FROM Competitions;");
-            foreach (var row in rows)
+            if (rows.Count <= 1)
             {
-                Entity entity = new Competition();
-                entity.TypeSort(row);
-                list.Add(entity);
+                return null;
             }
-            return list;
+            else
+            {
+                foreach (var row in rows)
+                {
+                    Entity entity = new Competition();
+                    entity.TypeSort(row);
+                    list.Add(entity);
+                }
+                return list;
+            }
         }
         public bool UpdateRecord(Entity entity)
         {
-            return db.UpdateDb($"UPDATE Competitions SET " +
+            return db.UpdateDb($"UPDATE Competitions SET " + 
+                               $"id = {((Competition)entity).Id}, " +
                                $"competitionName = '{((Competition)entity).CompetitionName.Replace("'", "''")}', " +
                                $"category = '{((Competition)entity).Category.Replace("'", "''")}', " +
                                $"isIndoor =  {(((Competition)entity).IsIndoor ? 1 : 0)}, " +
-                               $"isTeamCompetitions = {(((Competition)entity).IsTeamCompetition ? 1 : 0)} " +
+                               $"isTeamCompetition = {(((Competition)entity).IsTeamCompetition ? 1 : 0)} " +
                                $"WHERE id = {entity.Id};");
+        }
+
+        public void ImportCompetitionsFromFile(string filePath)
+        {
+            try
+            {
+                var lines = File.ReadAllLines(filePath);
+                foreach (var line in lines)
+                {
+                    var values = line.Split(';');
+                    if (values.Length < 5)
+                    {
+                        Console.WriteLine($"Skipping line due to insufficient data: {line}");
+                        continue;
+                    }
+                    var dictionary = new Dictionary<string, string>
+                    {
+                            { "id", values[0] },
+                            { "competitionName", values[1] },
+                            { "category", values[2] },
+                            { "isIndoor", values[3] },
+                            { "isTeamCompetition", values[4] }
+                    };
+
+                    Entity entity = new Competition();
+                    ((Competition)entity).FromDictionary(dictionary);
+
+                   if(entity != null)
+                    {                      
+                        CreateRecord(entity);
+                    }
+                    else
+                    {
+                        Console.WriteLine("Failed to create entity from the provided Data");
+                    }
+                }
+            }
+            catch (FileNotFoundException ex)
+            {
+                Console.WriteLine($"The file at path {filePath} was not found: {ex.Message}");
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"An error occurred while importing competitions from file: {ex.Message}");
+            }
         }
 
         #endregion
