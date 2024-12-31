@@ -14,13 +14,11 @@ namespace Olympics
         public Competition Competition { get; set; }
         public Event Event  { get; set; }
         public string MedalTier { get; set; }
-        #endregion
-
-        #region Methods
         public override string ToString()
         {
-            return $"Athlete: {Athlete.AthleteName} \nCompetition: {Competition.CompetitionName} \nEvent: {Event.EventName} \nMedal Tier: {MedalTier}\n";
+            return base.ToString() + $"Athlete: {Athlete?.AthleteName ?? "Unknown"} \nCompetition: {Competition?.CompetitionName ?? "Unknown"} \nEvent: {Event?.EventName ?? "Unknown"} \nMedal Tier: {MedalTier}\n";
         }
+
 
         public void FromDictionary(Dictionary<string, string> dictionary)
         {
@@ -69,6 +67,27 @@ namespace Olympics
                 MedalTier = dictionary["medalTier"];
             }
         }
+
+        public override void TypeSort(Dictionary<string, string> line)
+        {
+            base.TypeSort(line);
+
+            if (line.TryGetValue("idathlete", out string athleteId) && int.TryParse(athleteId, out int athleteIdValue))
+            {
+                Athlete = DAOAthletes.GetInstance().FindRecord(athleteIdValue) as Athlete;
+            }
+
+            if (line.TryGetValue("idcompetition", out string competitionId) && int.TryParse(competitionId, out int competitionIdValue))
+            {
+                Competition = DAOCompetitions.GetInstance().FindRecord(competitionIdValue) as Competition;
+            }
+
+            if (line.TryGetValue("idevent", out string eventId) && int.TryParse(eventId, out int eventIdValue))
+            {
+                Event = DAOEvents.GetInstance().FindRecord(eventIdValue) as Event;
+            }
+        }
+
         #endregion
     }
 }

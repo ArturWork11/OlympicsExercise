@@ -2,6 +2,7 @@
 using MSSTU.DB.Utility;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics.Contracts;
 using System.Diagnostics.Metrics;
 using System.Linq;
 using System.Text;
@@ -18,7 +19,6 @@ namespace Olympics
 
         public void MenuMethods()
         {
-            //bool menu = false;
             do
             {
 
@@ -39,6 +39,11 @@ namespace Olympics
                 Console.WriteLine("14. Delete Competition");
                 Console.WriteLine("15. Found Competition");
                 Console.WriteLine("16. Show All Competition");
+                Console.WriteLine("17. Insert Medal");
+                Console.WriteLine("18. Update Medal");
+                Console.WriteLine("19. Delete Medal");
+                Console.WriteLine("20. Found Medal");
+                Console.WriteLine("21. Show All Medals");
                 Console.WriteLine("0. Exit");
                 Console.WriteLine("Choose an option: ");
                 string option = Console.ReadLine();
@@ -91,6 +96,21 @@ namespace Olympics
                         break;
                     case "16":
                         ShowAllCompetition();
+                        break;
+                    case "17":
+                        InsertMedal();
+                        break;
+                    case "18":
+                        UpdateMedal();
+                        break;
+                    case "19":
+                        DeleteMedal();
+                        break;
+                    case "20":
+                        FoundMedal();
+                        break;
+                    case "21":
+                        ShowAllMedals();
                         break;
                     case "0":
                         Environment.Exit(0);
@@ -499,7 +519,7 @@ namespace Olympics
                 {
                     Console.WriteLine("Invalid option \nPlease insert again \"y\" or \"n\" ");
                 }
-            } while (isIndoor != "y" && isIndoor != "n");            
+            } while (isIndoor != "y" && isIndoor != "n");
             Console.WriteLine("Is team competition? (y/n): ");
             string isTeamCompetition = "";
             do
@@ -517,7 +537,7 @@ namespace Olympics
                 {
                     Console.WriteLine("Invalid option \nPlease insert again \"y\" or \"n\" ");
                 }
-            }while (isTeamCompetition != "y" && isTeamCompetition != "n");
+            } while (isTeamCompetition != "y" && isTeamCompetition != "n");
             if (daoCompetitions.CreateRecord(competition))
             {
                 Console.WriteLine("Competition inserted successfully");
@@ -552,7 +572,8 @@ namespace Olympics
             competition.Category = Console.ReadLine();
             Console.WriteLine("Is indoor competition? (y/n): ");
             string isIndoor = "";
-            do {
+            do
+            {
                 isIndoor = Console.ReadLine().ToLower();
                 if (isIndoor == "y")
                 {
@@ -566,7 +587,7 @@ namespace Olympics
                 {
                     Console.WriteLine("Invalid option \nPlease insert \"y\" or \"n\"");
                 }
-            } while (isIndoor != "y" && isIndoor != "n" );
+            } while (isIndoor != "y" && isIndoor != "n");
             Console.WriteLine("Is team competition? (y/n): ");
             string isTeamCompetition = "";
             do
@@ -650,6 +671,219 @@ namespace Olympics
             else
             {
                 Console.WriteLine("No competitions found");
+            }
+        }
+        public void InsertMedal()
+        {
+            Medal medal = new Medal
+            {
+                Athlete = new Athlete(),
+                Competition = new Competition(),
+                Event = new Event()
+            };
+            bool newId = false;
+            Console.WriteLine("Insert medal id: ");
+            do
+            {
+                medal.Id = int.Parse(Console.ReadLine());
+                if (daoMedals.FindRecord(medal.Id) != null)
+                {
+                    Console.WriteLine("Medal already exists, \nPlease insert a new id");
+                    newId = true;
+                }
+                else
+                {
+                    newId = false;
+                }
+            } while (newId != false);
+            Console.WriteLine("Insert medal tier 'bronze','silver' or 'gold': ");
+            do
+            {
+
+                switch (Console.ReadLine().ToLower())
+                {
+                    case "bronze":
+                        medal.MedalTier = "Bronzo";
+                        break;
+                    case "silver":
+                        medal.MedalTier = "Argento";
+                        break;
+                    case "gold":
+                        medal.MedalTier = "Oro";
+                        break;
+                    default:
+                        Console.WriteLine("Invalid medal tier \nPlease insert a valid medal tier");
+                        break;
+                }
+            } while (medal.MedalTier != "Bronzo" && medal.MedalTier != "Argento" && medal.MedalTier != "Oro");
+            Console.WriteLine("Insert athlete id: ");
+            do
+            {
+                medal.Athlete.Id = int.Parse(Console.ReadLine());
+                if (daoAthletes.FindRecord(medal.Athlete.Id) == null)
+                {
+                    Console.WriteLine("Athlete not found, \nPlease insert an existing id");
+                }
+            } while (daoAthletes.FindRecord(medal.Athlete.Id) == null);
+
+            Console.WriteLine("Insert competition id: ");
+            do
+            {
+                medal.Competition.Id = int.Parse(Console.ReadLine());
+                if (daoCompetitions.FindRecord(medal.Competition.Id) == null)
+                {
+                    Console.WriteLine("Competition not found, \nPlease insert an existing id");
+                }
+            } while (daoCompetitions.FindRecord(medal.Competition.Id) == null);
+            Console.WriteLine("Insert event id: ");
+            do
+            {
+                medal.Event.Id = int.Parse(Console.ReadLine());
+                if (daoEvents.FindRecord(medal.Event.Id) == null)
+                {
+                    Console.WriteLine("Event not found, \nPlease insert an existing id");
+                }
+            } while (daoEvents.FindRecord(medal.Event.Id) == null);
+
+            if (daoMedals.CreateRecord(medal))
+            {
+                Console.WriteLine("Medal inserted successfully");
+            }
+            else
+            {
+                Console.WriteLine("Failed to insert medal");
+            }
+        }
+        public void UpdateMedal()
+        {
+            Medal medal = new Medal
+            {
+                Athlete = new Athlete(),
+                Competition = new Competition(),
+                Event = new Event()
+            };
+
+            Console.WriteLine("Insert medal id: ");
+            bool existingId = false;
+            do
+            {
+                medal.Id = int.Parse(Console.ReadLine());
+                if (daoMedals.FindRecord(medal.Id) != null)
+                {
+                    existingId = false;
+                }
+                else
+                {
+                    Console.WriteLine("Medal not found, \nPlease insert an existing id");
+                    existingId = true;
+                }
+            } while (existingId != false);
+            Console.WriteLine("Insert medal tier 'bronze','silver' or 'gold': ");
+            do
+            {
+                switch (Console.ReadLine().ToLower())
+                {
+                    case "bronze":
+                        medal.MedalTier = "Bronzo";
+                        break;
+                    case "silver":
+                        medal.MedalTier = "Argento";
+                        break;
+                    case "gold":
+                        medal.MedalTier = "Oro";
+                        break;
+                    default:
+                        Console.WriteLine("Invalid medal tier \nPlease insert a valid medal tier");
+                        break;
+                }
+            } while (medal.MedalTier != "Bronzo" && medal.MedalTier != "Argento" && medal.MedalTier != "Oro");
+            Console.WriteLine("Insert athlete id: ");
+            do
+            {
+                medal.Athlete.Id = int.Parse(Console.ReadLine());
+                if (daoAthletes.FindRecord(medal.Athlete.Id) == null)
+                {
+                    Console.WriteLine("Athlete not found, \nPlease insert an existing id");
+                }
+            } while (daoAthletes.FindRecord(medal.Athlete.Id) == null);
+            Console.WriteLine("Insert competition id: ");
+            do
+            {
+                medal.Competition.Id = int.Parse(Console.ReadLine());
+                if (daoCompetitions.FindRecord(medal.Competition.Id) == null)
+                {
+                    Console.WriteLine("Competition not found, \nPlease insert an existing id");
+                }
+            } while (daoCompetitions.FindRecord(medal.Competition.Id) == null);
+            Console.WriteLine("Insert event id: ");
+            do
+            {
+                medal.Event.Id = int.Parse(Console.ReadLine());
+                if (daoEvents.FindRecord(medal.Event.Id) == null)
+                {
+                    Console.WriteLine("Event not found, \nPlease insert an existing id");
+                }
+            } while (daoEvents.FindRecord(medal.Event.Id) == null);
+            Console.WriteLine(daoMedals.UpdateRecord(medal) ? "Medal updated successfully" : "Failed to update medal");
+        }
+        public void DeleteMedal()
+        {
+            Console.WriteLine("Insert medal id: ");
+            int id = int.Parse(Console.ReadLine());
+            do
+            {
+                if (daoMedals.FindRecord(id) == null)
+                {
+                    Console.WriteLine("Medal not found, \nPlease insert an existing id");
+                    id = int.Parse(Console.ReadLine());
+                }
+            } while (daoMedals.FindRecord(id) == null);
+            if (daoMedals.DeleteRecord(id))
+            {
+                Console.WriteLine("Medal deleted successfully");
+            }
+            else
+            {
+                Console.WriteLine("Failed to delete medal");
+            }
+        }
+        public void FoundMedal()
+        {
+            Console.WriteLine("Insert medal id: ");
+            int id = int.Parse(Console.ReadLine());
+            Medal medal = (Medal)daoMedals.FindRecord(id);
+            do
+            {
+                if (daoMedals.FindRecord(id) == null)
+                {
+                    Console.WriteLine("Medal not found, \nPlease insert an existing id");
+                    id = int.Parse(Console.ReadLine());
+                }
+            } while (daoMedals.FindRecord(id) == null);
+            medal = (Medal)daoMedals.FindRecord(id);
+            if (medal != null)
+            {
+                Console.WriteLine(medal.ToString());
+            }
+            else
+            {
+                Console.WriteLine("Medal not found");
+            }
+        }
+        
+
+        public void ShowAllMedals()
+        {
+            if (daoMedals.GetRecords() != null)
+            {
+                foreach (Medal medal in daoMedals.GetRecords())
+                {
+                    Console.WriteLine(medal.ToString());
+                }
+            }
+            else
+            {
+                Console.WriteLine("No medals found");
             }
         }
     }

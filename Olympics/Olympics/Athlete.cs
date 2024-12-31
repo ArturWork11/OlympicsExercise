@@ -24,7 +24,7 @@ namespace Olympics
             return base.ToString() + $"Name: {AthleteName} \nSurname: {Surname} \nDate of birth: {DateOfBirth.ToString("yyyy-MM-dd")} \nCountry: {Country}\n";
         }
 
-        public  void FromDictionary(Dictionary<string, string> dictionary)
+        public void FromDictionary(Dictionary<string, string> dictionary)
         {
             if (dictionary.ContainsKey("id"))
             {
