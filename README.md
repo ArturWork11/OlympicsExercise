@@ -20,4 +20,8 @@ Console-based Olympics management system for the Christmas vacation task of the 
 3.	Navigate Menu: Use the menu to access various functionalities.
 
 **Conclusion**
-The **OlympicsExercise** is a console-based system designed to manage and analyze Olympic data. Key features include displaying medals by athlete, listing competitions by event, summarizing athlete medals, and identifying the oldest gold medalist. The application also analyzes team sports, including total medals, athlete participation, and most frequent medal categories. Data is imported from CSV files into a structured database, and users can navigate through the system using a simple menu. This project showcases effective data handling and analysis of Olympic sports information.
+The **OlympicsExercise** is a console-based system designed to manage and analyze Olympic data. 
+Key features include displaying medals by athlete, listing competitions by event, summarizing athlete medals, and identifying the oldest gold medalist. 
+The application also analyzes team sports, including total medals, athlete participation, and most frequent medal categories. 
+Data is imported from CSV files into a structured database, and users can navigate through the system using a simple menu. 
+This project showcases effective data handling and analysis of Olympic sports information.
