@@ -155,7 +155,30 @@ namespace Olympics
             }            
         }
 
-        
+        public void CountOfEachTierOfMedalsWonByAnAthlete(int athleteId)
+        {
+            bool athlete = false;           
+            var rows = db.ReadDb($"SELECT athleteName, Surname,medalTier, COUNT(*) as medalCount\r\n FROM Medals m join Athletes a\r\n ON m.idAthlete = a.id\r\n WHERE idAthlete = {athleteId} \r\n GROUP BY athleteName, surname, medalTier");
+            if (rows.Count < 1)
+            {
+                Console.WriteLine("No medals found.");
+            }
+            else
+            { 
+                
+                foreach (var row in rows)
+                {
+                    if (athlete == false)
+                    {
+                        Console.WriteLine($"\nMedals won by Athlete: {row["athletename"]} {row["surname"]} \n");
+                        athlete = true;
+                    }
+                    Console.WriteLine($"Medal Tier: {row["medaltier"]} \tTotal: {row["medalcount"]}");
+                }
+            }
+        }
+
+
 
 
         #endregion

@@ -132,7 +132,7 @@ namespace Olympics
                     case "24":
                         Console.WriteLine("Insert athlete id: ");
                         int athleteId = int.Parse(Console.ReadLine());
-                        //daoMedals.CountOfEachTierOfMedalsWonByAnAthlete(athleteId);
+                        daoMedals.CountOfEachTierOfMedalsWonByAnAthlete(athleteId);
                         break;
                     case "25":
                         Console.WriteLine("Insert country: ");
