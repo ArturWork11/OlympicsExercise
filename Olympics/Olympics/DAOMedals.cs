@@ -152,10 +152,10 @@ namespace Olympics
                     medal.TypeSort(row);                   
                     Console.WriteLine(medal.ToString());
                 }
-            }
-
-            
+            }            
         }
+
+        
 
 
         #endregion

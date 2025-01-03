@@ -10,9 +10,9 @@ namespace Olympics
    internal class Medal : Entity
     {
         #region Properties
-        public Athlete Athlete { get; set; }
-        public Competition Competition { get; set; }
-        public Event Event  { get; set; }
+        public Athlete? Athlete { get; set; }
+        public Competition? Competition { get; set; }
+        public Event? Event  { get; set; }
         public string MedalTier { get; set; }
         public override string ToString()
         {
@@ -76,15 +76,27 @@ namespace Olympics
             {
                 Athlete = DAOAthletes.GetInstance().FindRecord(athleteIdValue) as Athlete;
             }
+            else
+            {
+                Athlete = null;
+            }
 
             if (line.TryGetValue("idcompetition", out string competitionId) && int.TryParse(competitionId, out int competitionIdValue))
             {
                 Competition = DAOCompetitions.GetInstance().FindRecord(competitionIdValue) as Competition;
             }
+            else
+            {
+                Competition = null;
+            }
 
             if (line.TryGetValue("idevent", out string eventId) && int.TryParse(eventId, out int eventIdValue))
             {
                 Event = DAOEvents.GetInstance().FindRecord(eventIdValue) as Event;
+            }
+            else
+            {
+                Event = null;
             }
         }
 

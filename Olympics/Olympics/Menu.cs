@@ -127,7 +127,7 @@ namespace Olympics
                     case "23":
                         Console.WriteLine("Insert event id: ");
                         int eventId = int.Parse(Console.ReadLine());
-                        //daoCompetitions.AllCompetitionsOfAnEvent(eventId);
+                        daoCompetitions.AllCompetitionsOfAnEvent(eventId);
                         break;
                     case "24":
                         Console.WriteLine("Insert athlete id: ");
@@ -155,7 +155,7 @@ namespace Olympics
                         Console.WriteLine("Invalid option");
                         break;
                 }
-                Console.WriteLine("Press any key to continue");
+                Console.WriteLine("\nPress any key to continue");
                 Console.ReadKey();
             } while (true);
         }

@@ -127,6 +127,34 @@ namespace Olympics
         }
 
         #endregion
+
+        #region Additional Methods
+
+        public void AllCompetitionsOfAnEvent(int eventId)
+        {
+            bool sportEvent = false;
+            var rows = db.ReadDb($" SELECT  idCompetition, idEvent, eventname,eventYear, competitionName , category\r\n from medals m \r\njoin SportEvents e\r\n on e.id = m.idEvent\r\n join Competitions c on m.idCompetition = c.Id\r\n where idEvent = {eventId}\r\n order by competitionName;");
+            if (rows.Count < 1)
+            {
+                Console.WriteLine("No Competition found for the specified event.");
+            }
+            else
+            { 
+                foreach (var row in rows)
+                {
+                    Medal medal = new Medal();
+                    medal.TypeSort(row);
+                    if (sportEvent == false)
+                    {
+                        Console.WriteLine($"\nEvent: {medal.Event?.EventName ?? "Unknown"} {medal.Event?.EventYear} \n");
+                        sportEvent = true;
+                    }
+                    Console.WriteLine($"Competition: {medal.Competition?.CompetitionName ?? "Unknown"} \tCategory: {medal.Competition?.Category ?? "Unknown"}");
+                }
+            }
+        }
+
+        #endregion
     }
 
 }
