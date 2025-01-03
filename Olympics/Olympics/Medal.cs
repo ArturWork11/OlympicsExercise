@@ -20,7 +20,7 @@ namespace Olympics
         #region Methods
         public override string ToString()
         {
-            return "\nMedal " + base.ToString() + $"Medal Tier: {MedalTier ?? "Unknown"} \nAthlete id: {Athlete.Id} \nAthlete: {Athlete?.AthleteName ?? "Unknown"} {Athlete?.Surname ?? "Unknown"} \nCompetition: {Competition?.CompetitionName ?? "Unknown"} \nEvent: {Event?.EventName ?? "Unknown"} \nMedal Tier: {MedalTier ?? "Unknown"} \nEvent Year: {Event?.EventYear}\n";
+            return "\nMedal " + base.ToString() + $"\nAthlete id: {Athlete.Id} \nAthlete: {Athlete?.AthleteName ?? "Unknown"} {Athlete?.Surname ?? "Unknown"} \nCompetition: {Competition?.CompetitionName ?? "Unknown"} \nEvent: {Event?.EventName ?? "Unknown"} \nMedal Tier: {MedalTier ?? "Unknown"} \nEvent Year: {Event?.EventYear}\n";
         }
 
 
