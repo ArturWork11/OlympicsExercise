@@ -137,7 +137,7 @@ namespace Olympics
                     case "25":
                         Console.WriteLine("Insert country: ");
                         string country = Console.ReadLine();
-                        //daoMedals.AllAthletesWhoWonMedalsForTheirCountry(country);
+                        daoMedals.AthletesWhoWonMedalsForTheirCountry(country);
                         break;
                     case "26":
                         //daoMedals.OldestAthleteWhoWonAGoldMedal();

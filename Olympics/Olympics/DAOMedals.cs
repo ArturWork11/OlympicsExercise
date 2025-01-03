@@ -1,6 +1,7 @@
 ﻿using MSSTU.DB.Utility;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics.Metrics;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -161,7 +162,7 @@ namespace Olympics
             var rows = db.ReadDb($"SELECT athleteName, Surname,medalTier, COUNT(*) as medalCount\r\n FROM Medals m join Athletes a\r\n ON m.idAthlete = a.id\r\n WHERE idAthlete = {athleteId} \r\n GROUP BY athleteName, surname, medalTier");
             if (rows.Count < 1)
             {
-                Console.WriteLine("No medals found.");
+                Console.WriteLine("No medals found for the specified Athlete.");
             }
             else
             { 
@@ -178,6 +179,22 @@ namespace Olympics
             }
         }
 
+        public void AthletesWhoWonMedalsForTheirCountry(string country)
+        {
+            var rows = db.ReadDb($"SELECT athleteName, Surname, country, count(*) as medalCount\r\nFROM Medals m join Athletes a\r\non m.idAthlete = a.id\r\nwhere country = '{country.ToLower()}'\r\ngroup by athleteName, surname, country;");
+            if (rows.Count < 1)
+            {
+                Console.WriteLine("No Athlete won medals for the specified country.");
+            }
+            else
+            {
+                Console.WriteLine($"\nAthletes who won medals for {country}:\n");
+                foreach (var row in rows)
+                {
+                    Console.WriteLine($"Athlete: {row["athletename"]} {row["surname"]} \tTotal Medals won: {row["medalcount"]}");
+                }
+            }
+        }
 
 
 
