@@ -12,11 +12,14 @@ namespace Olympics
 {
     internal class Menu
     {
+        #region Properties
         DAOAthletes daoAthletes = DAOAthletes.GetInstance();
         DAOCompetitions daoCompetitions = DAOCompetitions.GetInstance();
         DAOEvents daoEvents = DAOEvents.GetInstance();
         DAOMedals daoMedals = DAOMedals.GetInstance();
+        #endregion
 
+        #region Menu
         public void MenuMethods()
         {
             do
@@ -159,6 +162,10 @@ namespace Olympics
                 Console.ReadKey();
             } while (true);
         }
+
+        #endregion
+
+        #region Methods
         public void ImportFromFileMethods()
         {
 
@@ -920,5 +927,8 @@ namespace Olympics
                 Console.WriteLine("No medals found");
             }
         }
+
+    #endregion
     }
+
 }
