@@ -132,5 +132,32 @@ namespace Olympics
             }
         }
         #endregion
+
+        #region Additional Methods
+
+        public void AllMedalsOfAnAthlete(int athleteId)
+        {
+                    
+            var rows = db.ReadDb($"SELECT m.id ,idAthlete, idCompetition, idEvent, medalTier,athleteName, surname,competitionName,eventName  FROM Medals m JOIN Athletes a ON m.idAthlete = a.Id  \r\n JOIN Competitions c ON m.idCompetition = c.Id \r\n  JOIN SportEvents e ON m.idEvent = e.id  \r\n WHERE a.Id = {athleteId} ORDER BY CASE  \r\n WHEN m.medalTier = 'Oro' THEN 1 \r\n WHEN m.medalTier = 'Argento' THEN 2\r\n WHEN m.medalTier = 'Bronzo' THEN 3\r\n END, e.eventYear;");
+            if (rows.Count < 1)
+            {
+                Console.WriteLine("No medals found for the specified athlete.");
+            }
+            else 
+            {
+
+                foreach (var row in rows)
+                {
+                    Entity medal = new Medal();
+                    medal.TypeSort(row);                   
+                    Console.WriteLine(medal.ToString());
+                }
+            }
+
+            
+        }
+
+
+        #endregion
     }
 }

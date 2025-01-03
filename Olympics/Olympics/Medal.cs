@@ -16,7 +16,7 @@ namespace Olympics
         public string MedalTier { get; set; }
         public override string ToString()
         {
-            return base.ToString() + $"Athlete: {Athlete?.AthleteName ?? "Unknown"} \nCompetition: {Competition?.CompetitionName ?? "Unknown"} \nEvent: {Event?.EventName ?? "Unknown"} \nMedal Tier: {MedalTier}\n";
+            return "\nMedal " + base.ToString() + $"Medal Tier: {MedalTier ?? "Unknown"} \nAthlete id: {Athlete.Id} \nAthlete: {Athlete?.AthleteName ?? "Unknown"} {Athlete?.Surname ?? "Unknown"} \nCompetition: {Competition?.CompetitionName ?? "Unknown"} \nEvent: {Event?.EventName ?? "Unknown"} \nMedal Tier: {MedalTier ?? "Unknown"} \nEvent Year: {Event?.EventYear}\n";
         }
 
 

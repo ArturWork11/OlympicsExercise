@@ -23,15 +23,15 @@ namespace Olympics
             {
 
                 Console.Clear();
-                Console.WriteLine("1. Import from file");
-                Console.WriteLine("2. Insert Athlete");
-                Console.WriteLine("3. Update Athlete");
-                Console.WriteLine("4. Delete Athlete");
-                Console.WriteLine("5. Found Athlete");
-                Console.WriteLine("6. Show All Athletes");
-                Console.WriteLine("7. Insert Event");
-                Console.WriteLine("8. Update Event");
-                Console.WriteLine("9. Delete Event");
+                Console.WriteLine("1.  Import from file");
+                Console.WriteLine("2.  Insert Athlete");
+                Console.WriteLine("3.  Update Athlete");
+                Console.WriteLine("4.  Delete Athlete");
+                Console.WriteLine("5.  Found Athlete");
+                Console.WriteLine("6.  Show All Athletes");
+                Console.WriteLine("7.  Insert Event");
+                Console.WriteLine("8.  Update Event");
+                Console.WriteLine("9.  Delete Event");
                 Console.WriteLine("10. Found Event");
                 Console.WriteLine("11. Show All Events");
                 Console.WriteLine("12. Insert Competition");
@@ -44,7 +44,14 @@ namespace Olympics
                 Console.WriteLine("19. Delete Medal");
                 Console.WriteLine("20. Found Medal");
                 Console.WriteLine("21. Show All Medals");
-                Console.WriteLine("0. Exit");
+                Console.WriteLine("22. Show All Medals of an Athlete");
+                Console.WriteLine("23. Show All the Competitions of an Event");
+                Console.WriteLine("24. Show the count of each tier of medals won by an athlete");
+                Console.WriteLine("25. Show all the athletes who won medals for their country");
+                Console.WriteLine("26. Show the oldest athlete who won a gold medal");
+                Console.WriteLine("27. Show how many medals were won in team competitions and how many athletes participated in each competition");
+                Console.WriteLine("28. Show the category that won the most medals");
+                Console.WriteLine("0.  Exit");
                 Console.WriteLine("Choose an option: ");
                 string option = Console.ReadLine();
                 switch (option)
@@ -111,6 +118,35 @@ namespace Olympics
                         break;
                     case "21":
                         ShowAllMedals();
+                        break;
+                    case "22":
+                        Console.WriteLine("Insert athlete id: ");
+                        int id = int.Parse(Console.ReadLine());
+                        daoMedals.AllMedalsOfAnAthlete(id);
+                        break;
+                    case "23":
+                        Console.WriteLine("Insert event id: ");
+                        int eventId = int.Parse(Console.ReadLine());
+                        //daoCompetitions.AllCompetitionsOfAnEvent(eventId);
+                        break;
+                    case "24":
+                        Console.WriteLine("Insert athlete id: ");
+                        int athleteId = int.Parse(Console.ReadLine());
+                        //daoMedals.CountOfEachTierOfMedalsWonByAnAthlete(athleteId);
+                        break;
+                    case "25":
+                        Console.WriteLine("Insert country: ");
+                        string country = Console.ReadLine();
+                        //daoMedals.AllAthletesWhoWonMedalsForTheirCountry(country);
+                        break;
+                    case "26":
+                        //daoMedals.OldestAthleteWhoWonAGoldMedal();
+                        break;
+                    case "27":
+                        //daoMedals.MedalsWonInTeamCompetitionsAndAthletes();
+                        break;
+                    case "28":
+                        //daoMedals.CategoryThatWonTheMostMedals();
                         break;
                     case "0":
                         Environment.Exit(0);
@@ -869,9 +905,7 @@ namespace Olympics
             {
                 Console.WriteLine("Medal not found");
             }
-        }
-        
-
+        }       
         public void ShowAllMedals()
         {
             if (daoMedals.GetRecords() != null)
