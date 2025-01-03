@@ -208,7 +208,23 @@ namespace Olympics
             {
                 Console.WriteLine("No Athlete found who won a Gold Medal.");
             }
+        }
 
+        public void MedalsWonInTeamCompetitionsAndAthletes()
+        {
+            var rows = db.ReadDb($"SELECT competitionName, COUNT(distinct a.id) AS athletesInTeam, COUNT(m.id) AS medalsWon\r\nFROM Medals m JOIN Competitions c\r\non m.idCompetition = c.id\r\nJOIN Athletes a\r\nON m.idAthlete = a.id\r\nWHERE isTeamCompetition = 1\r\ngroup by competitionName");
+            if (rows.Count < 1)
+            {
+                Console.WriteLine("No Competitions in Teams were found");
+            }
+            else
+            {
+                foreach (var row in rows)
+                {
+
+                Console.WriteLine($"\nCompetition: {row["competitionname"]} \nAthletes: { row["athletesinteam"]} \nMedals won in that competition: {row["medalswon"]}");
+                }
+            }
         }
             #endregion
     }
