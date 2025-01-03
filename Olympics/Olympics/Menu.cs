@@ -146,7 +146,7 @@ namespace Olympics
                         daoMedals.MedalsWonInTeamCompetitionsAndAthletes();
                         break;
                     case "28":
-                        //daoMedals.CategoryThatWonTheMostMedals();
+                        daoMedals.CategoryThatWonTheMostMedals();
                         break;
                     case "0":
                         Environment.Exit(0);

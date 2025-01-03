@@ -226,6 +226,20 @@ namespace Olympics
                 }
             }
         }
+
+        public void CategoryThatWonTheMostMedals()
+        {
+            var row = db.ReadOneDb($"SELECT TOP 1 category, COUNT(category) as medalsWon\r\nFROM Competitions c join Medals m\r\non m.idCompetition = c.id\r\ngroup by category\r\norder by medalsWon desc");
+            if (row != null)
+            {
+                Console.WriteLine($"\nCategory that won the most medals:\n");
+                Console.WriteLine($"Category: {row["category"]} \nMedals Won: {row["medalswon"]}");
+            }
+            else
+            {
+                Console.WriteLine("No Category found that won medals.");
+            }
+        }
             #endregion
     }
 }
