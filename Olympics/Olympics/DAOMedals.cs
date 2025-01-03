@@ -15,7 +15,7 @@ namespace Olympics
         private IDatabase db;
         private DAOMedals()
         {
-            db = new Database("Olympics","ArtuzPc");
+            db = new Database("Olympics", "ArtuzPc");
         }
         private static DAOMedals instance = null;
         public static DAOMedals GetInstance()
@@ -30,7 +30,7 @@ namespace Olympics
         public bool CreateRecord(Entity entity)
         {
             return db.UpdateDb($"INSERT INTO Medals (id, idAthlete, idCompetition, idEvent, medalTier) " +
-                               $"VALUES " + 
+                               $"VALUES " +
                                $"( {((Medal)entity).Id}, " +
                                $"  {(((Medal)entity).Athlete != null ? ((Medal)entity).Athlete.Id : "null")}, " +
                                $"  {(((Medal)entity).Competition != null ? ((Medal)entity).Competition.Id : "null")}, " +
@@ -108,20 +108,20 @@ namespace Olympics
 
                     Entity entity = new Medal();
 
-                    
+
                     ((Medal)entity).FromDictionary(dictionary);
 
                     if (entity != null)
-                {
+                    {
 
 
-                    CreateRecord(entity);
+                        CreateRecord(entity);
+                    }
+                    else
+                    {
+                        Console.WriteLine("Failed to create entity from the provided Data");
+                    }
                 }
-                else
-                {
-                    Console.WriteLine("Failed to create entity from the provided Data");
-                }
-            }
             }
             catch (FileNotFoundException ex)
             {
@@ -138,35 +138,35 @@ namespace Olympics
 
         public void AllMedalsOfAnAthlete(int athleteId)
         {
-                    
+
             var rows = db.ReadDb($"SELECT m.id ,idAthlete, idCompetition, idEvent, medalTier,athleteName, surname,competitionName,eventName  FROM Medals m JOIN Athletes a ON m.idAthlete = a.Id  \r\n JOIN Competitions c ON m.idCompetition = c.Id \r\n  JOIN SportEvents e ON m.idEvent = e.id  \r\n WHERE a.Id = {athleteId} ORDER BY CASE  \r\n WHEN m.medalTier = 'Oro' THEN 1 \r\n WHEN m.medalTier = 'Argento' THEN 2\r\n WHEN m.medalTier = 'Bronzo' THEN 3\r\n END, e.eventYear;");
             if (rows.Count < 1)
             {
                 Console.WriteLine("No medals found for the specified athlete.");
             }
-            else 
+            else
             {
 
                 foreach (var row in rows)
                 {
                     Entity medal = new Medal();
-                    medal.TypeSort(row);                   
+                    medal.TypeSort(row);
                     Console.WriteLine(medal.ToString());
                 }
-            }            
+            }
         }
 
         public void CountOfEachTierOfMedalsWonByAnAthlete(int athleteId)
         {
-            bool athlete = false;           
+            bool athlete = false;
             var rows = db.ReadDb($"SELECT athleteName, Surname,medalTier, COUNT(*) as medalCount\r\n FROM Medals m join Athletes a\r\n ON m.idAthlete = a.id\r\n WHERE idAthlete = {athleteId} \r\n GROUP BY athleteName, surname, medalTier");
             if (rows.Count < 1)
             {
                 Console.WriteLine("No medals found for the specified Athlete.");
             }
             else
-            { 
-                
+            {
+
                 foreach (var row in rows)
                 {
                     if (athlete == false)
@@ -196,8 +196,20 @@ namespace Olympics
             }
         }
 
+        public void OldestAthleteWhoWonAGoldMedal()
+        {
+            var row = db.ReadOneDb($"SELECT TOP 1  athleteName, surname, dateOfBirth , eventYear, MAX(DATEDIFF(YEAR,dateOfBirth,CONCAT(eventYear,'-01-01'))) AS years\r\nFROM Medals m join Athletes a\r\nON a.id = m.idAthlete\r\nJOIN SportEvents e\r\nON e.id = m.idEvent\r\nWHERE medalTier = 'oro' \r\ngroup by athleteName, surname, dateOfBirth, eventYear");
+            if (row != null)
+            {
+                Console.WriteLine($"\nOldest Athlete who won a Gold Medal:\n");
+                Console.WriteLine($"Athlete: {row["athletename"]} {row["surname"]} \nDate of Birth: {row["dateofbirth"]} \nEvent Year: {row["eventyear"]} \nYears at the moment of winning: {row["years"]} ");
+            }
+            else
+            {
+                Console.WriteLine("No Athlete found who won a Gold Medal.");
+            }
 
-
-        #endregion
+        }
+            #endregion
     }
 }

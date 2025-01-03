@@ -140,7 +140,7 @@ namespace Olympics
                         daoMedals.AthletesWhoWonMedalsForTheirCountry(country);
                         break;
                     case "26":
-                        //daoMedals.OldestAthleteWhoWonAGoldMedal();
+                        daoMedals.OldestAthleteWhoWonAGoldMedal();
                         break;
                     case "27":
                         //daoMedals.MedalsWonInTeamCompetitionsAndAthletes();
